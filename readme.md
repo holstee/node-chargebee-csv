@@ -20,3 +20,7 @@ To initiate a new Welcome Kit use:
 ```
 node ./welcome-kit
 ```
+
+Here's what the whole thing looks like:
+
+![screenshot](https://raw.githubusercontent.com/holstee/node-chargebee-csv/screenshots/example1.png)
