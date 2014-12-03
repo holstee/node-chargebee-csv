@@ -1,0 +1,20 @@
+{
+  "name": "chargebee-csv",
+  "version": "1.0.0",
+  "description": "> Note: This is an internal tool that we use @Holstee. It's very specific to our needs for maniplating a CSV programatically.",
+  "main": "index.js",
+  "author": "Thomas Reggi",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^2.3.11",
+    "csv-parse": "0.0.6",
+    "csv-stringify": "0.0.4",
+    "debug": "^2.1.0",
+    "inquirer": "^0.8.0",
+    "moment": "^2.8.4",
+    "underscore": "^1.7.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
