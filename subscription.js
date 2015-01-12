@@ -13,22 +13,26 @@ stringify = Promise.promisify(stringify);
 
 module.exports = subscription;
 
-function chargebee(start, end, keep) {
-  return function(data) {
-    var header = data.shift();
-    debug("csv orignal %d", data.length);
-    data = chargebeeStatus(data, header);
-    debug("csv status %d", data.length);
-    end.add(1, "day"); // capture todays
-    if (start && end) {
-      data = chargebeeDate(data, header, start, end)
-      debug("csv date %d", data.length);
-    }
-    var indexes = chargebeeIndexes(header, keep);
-    data = chargebeeAbide(data, indexes);
-    data.unshift(keep);
-    return data;
+function welcomeKits(data, start, end) {
+  var header = data.shift();
+  debug("csv orignal %d", data.length);
+  data = chargebeeStatus(data, header);
+  debug("csv status %d", data.length);
+  end.add(1, "day"); // capture todays
+  if (start && end) {
+    data = chargebeeDate(data, header, start, end)
+    debug("csv date %d", data.length);
   }
+  data.unshift(header);
+  return data;
+}
+
+function KeepColumns(data, keep){
+  var header = data.shift();
+  var indexes = chargebeeIndexes(header, keep);
+  data = chargebeeAbide(data, indexes);
+  data.unshift(keep);
+  return data;
 }
 
 function chargebeeIndexes(header, keep) {
@@ -65,12 +69,23 @@ function chargebeeStatus(rows, header) {
   });
 }
 
+function fileName(start, end){
+  if(start && end){
+    var export_filename = util.format("Welcome Kits %s-%s.csv", start.format("YYMMDD"), end.format("YYMMDD"));
+  }else{
+    var date = new Date();
+    var format = moment(date).format("YYMM");
+    var export_filename = util.format("Subscription Final %s.csv", format);
+  }
+  return export_filename;
+}
+
 function subscription(import_csv, start, end) {
   import_csv = import_csv.replace(/\s+|\n|\r/gi, "");
   if (!moment.isMoment(start)) start = moment(start, "YYMMDD");
   if (!moment.isMoment(end)) end = moment(end, "YYMMDD");
+  var export_filename = fileName(start, end);
   var import_dirname = path.dirname(import_csv);
-  var export_filename = util.format("Welcome Kits %s-%s.csv", start.format("YYMMDD"), end.format("YYMMDD"));
   var export_csv = path.join(import_dirname, export_filename);
   var keep = [
     'addresses.first_name',
@@ -89,7 +104,11 @@ function subscription(import_csv, start, end) {
     .then(function(data) {
       return parse(data);
     })
-    .then(chargebee(start, end, keep))
+    .then(function(data){
+      if(start && end) data = welcomeKits(data, start, end);
+      console.log(data);
+      return KeepColumns(data, keep);
+    })
     .then(function(data) {
       return stringify(data);
     })
