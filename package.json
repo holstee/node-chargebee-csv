@@ -10,6 +10,7 @@
     "csv-parse": "0.0.6",
     "csv-stringify": "0.0.4",
     "debug": "^2.1.0",
+    "dotty": "0.0.2",
     "inquirer": "^0.8.0",
     "minimist": "^1.1.0",
     "moment": "^2.8.4",
