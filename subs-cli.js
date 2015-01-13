@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-
+var debug = require("debug")
+debug.enable('*')
 var moment = require("moment")
 var subscription = require("./subscription")
 var inquirer = require("inquirer")
